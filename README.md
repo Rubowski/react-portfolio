@@ -1,7 +1,7 @@
 # React Portfolio
 
 A modern, responsive portfolio website built with React and Chakra UI.  
-Showcases my projects, skills, and contact information.  
+Showcases projects, skills, and contact information.  
 Deployed for anyone to view and connect with me!
 
 ---
