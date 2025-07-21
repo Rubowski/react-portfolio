@@ -19,9 +19,15 @@ Deployed for anyone to view and connect with me!
 
 ## 🖼️ Screenshots
 
+<p align="center"><strong>Landing Section</strong></p>
+
 ![Landing Section](./screenshots/image1.png)
 
+<p align="center"><strong>Projects Section</strong></p>
+
 ![Project Section](./screenshots/image2.png)
+
+<p align="center"><strong>Contact Me Section</strong></p>
 
 ![Contact Me Section](./screenshots/image3.png)
 
