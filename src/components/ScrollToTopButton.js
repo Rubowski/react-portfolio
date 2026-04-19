@@ -8,33 +8,32 @@ const ScrollToTopButton = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsVisible(window.scrollY > 200);
+      setIsVisible(window.scrollY > 320);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <Fade in={isVisible}>
       <IconButton
-        icon={<FontAwesomeIcon icon={faArrowUp} size="2x" />}
-        onClick={scrollToTop}
+        icon={<FontAwesomeIcon icon={faArrowUp} />}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         position="fixed"
-        bottom="32px"
-        right="32px"
+        bottom={{ base: "20px", md: "32px" }}
+        right={{ base: "20px", md: "32px" }}
         zIndex={1500}
-        colorScheme="black"
         aria-label="Scroll to top"
         borderRadius="full"
         boxShadow="lg"
         size="md"
+        bg="brand.500"
+        color="gray.900"
+        _hover={{ bg: "brand.400" }}
+        _active={{ bg: "brand.600" }}
       />
     </Fade>
   );
 };
 
-export default ScrollToTopButton; 
+export default ScrollToTopButton;

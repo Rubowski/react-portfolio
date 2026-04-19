@@ -42,5 +42,10 @@
   },
   "devDependencies": {
     "prettier": "^2.7.1"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^@chakra-ui/utils/context$": "<rootDir>/node_modules/@chakra-ui/utils/dist/cjs/context.cjs"
+    }
   }
 }

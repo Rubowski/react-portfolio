@@ -1,23 +1,29 @@
 import React from "react";
-import {Box, Flex} from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { gradientFooter } from "../constants/sectionGradients";
 
 const Footer = () => {
   return (
-    <Box backgroundColor="#18181b">
-      <footer>
-        <Flex
-          margin="0 auto"
-          px={12}
-          color="white"
-          justifyContent="center"
-          alignItems="center"
-          maxWidth="1024px"
-          height={16}
-        >
-          <p>Odysseas Roumpeas • © 2025</p>
-        </Flex>
-      </footer>
+    <Box
+      as="footer"
+      bgGradient={gradientFooter}
+      borderTopWidth="1px"
+      borderColor="whiteAlpha.50"
+    >
+      <Flex
+        maxW="1280px"
+        mx="auto"
+        px={{ base: 4, md: 10 }}
+        py={8}
+        justify="center"
+        align="center"
+      >
+        <Text color="whiteAlpha.600" fontSize="sm" textAlign="center">
+          Odysseas Roumpeas · © {new Date().getFullYear()}
+        </Text>
+      </Flex>
     </Box>
   );
 };
+
 export default Footer;

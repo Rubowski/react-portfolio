@@ -1,38 +1,57 @@
-import {useState} from "react";
+import { useState } from "react";
+import { enquiryLabelByValue } from "../constants/contactEnquiry";
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const WEB3FORMS_URL = "https://api.web3forms.com/submit";
 
-/**
- * This is a custom hook that can be used to submit a form and simulate an API call
- * It uses Math.random() to simulate a random success or failure, with 50% chance of each
- */
 const useSubmit = () => {
   const [isLoading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
 
-  const submit = async (url, data) => {
-    const random = Math.random();
+  const submit = async (data) => {
+    const accessKey = process.env.REACT_APP_WEB3FORMS_ACCESS_KEY;
+    setResponse(null);
     setLoading(true);
     try {
-      await wait(2000);
-      if (random < 0.5) {
-        throw new Error("Something went wrong");
+      if (!accessKey) {
+        throw new Error(
+          "Contact form is not configured. Add REACT_APP_WEB3FORMS_ACCESS_KEY to .env.local (local) and to Vercel Environment Variables (production). Get a key at https://web3forms.com"
+        );
+      }
+      const enquiry = enquiryLabelByValue[data.type] ?? data.type;
+      const res = await fetch(WEB3FORMS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: accessKey,
+          subject: `Portfolio contact: ${enquiry}`,
+          name: data.firstName,
+          email: data.email,
+          message: `Enquiry type: ${enquiry}\n\n${data.comment}`,
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.success === false) {
+        throw new Error(
+          json.message || "Could not send your message. Please try again."
+        );
       }
       setResponse({
-        type: 'success',
-        message: `Thanks for your submission ${data.firstName}, we will get back to you shortly!`,
-      })
+        type: "success",
+        message: `Thanks ${data.firstName}, your message was sent.`,
+      });
     } catch (error) {
       setResponse({
-        type: 'error',
-        message: 'Something went wrong, please try again later!',
-      })
+        type: "error",
+        message:
+          error.message ||
+          "Something went wrong, please try again later.",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return { isLoading, response, submit };
-}
+};
 
 export default useSubmit;
