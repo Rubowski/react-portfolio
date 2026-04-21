@@ -5,27 +5,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBriefcase, faGamepad } from "@fortawesome/free-solid-svg-icons";
 import { SECTION_INNER_MAX_W } from "../constants/layout";
 import { gradientBeyond } from "../constants/sectionGradients";
+import { useLanguage } from "../context/LanguageContext";
 
-/**
- * Work that doesn’t appear in the main grid—NDA, employer-owned, or off-scope.
- * Edit `notes` below; keep lines short so this stays a footnote, not a wall of caveats.
- */
-const notes = [
-  {
-    icon: faBriefcase,
-    title: "More Shopify commerce work",
-    body:
-      "Two additional stores I’ve worked on aren’t listed above—they’re still privately owned by companies, so they can’t be shared as public portfolio pieces.",
-  },
-  {
-    icon: faGamepad,
-    title: "Game dev experiments",
-    body:
-      "Small side projects in Godot and Unreal Engine. They’re minor and outside the focus of this site, but I’m glad to mention them in conversation if it ever matters.",
-  },
+const noteBlocks = [
+  { id: "moreShopify", icon: faBriefcase },
+  { id: "gameDev", icon: faGamepad },
 ];
 
 const BeyondProjectsSection = () => {
+  const { t } = useLanguage();
+
   return (
     <FullScreenSection
       isDarkBackground
@@ -38,7 +27,7 @@ const BeyondProjectsSection = () => {
     >
       <VStack align="start" spacing={2} w="100%">
         <Heading as="h2" fontSize={{ base: "xl", md: "2xl" }}>
-          Beyond what’s on this page
+          {t("beyond.title")}
         </Heading>
         <Text
           color="whiteAlpha.700"
@@ -46,16 +35,14 @@ const BeyondProjectsSection = () => {
           maxW="4xl"
           lineHeight="tall"
         >
-          The grid above is a curated slice of work. I’ve shipped other things
-          that don’t appear there for ordinary reasons—access, ownership, or
-          simply because they’re a different kind of project.
+          {t("beyond.intro")}
         </Text>
       </VStack>
 
       <VStack align="stretch" spacing={4} w="100%">
-        {notes.map((item) => (
+        {noteBlocks.map((item) => (
           <Box
-            key={item.title}
+            key={item.id}
             display="flex"
             gap={4}
             alignItems="flex-start"
@@ -70,10 +57,10 @@ const BeyondProjectsSection = () => {
             </Box>
             <Box>
               <Text fontWeight="700" fontSize="sm" mb={2} color="white">
-                {item.title}
+                {t(`beyond.${item.id}Title`)}
               </Text>
               <Text fontSize="sm" color="whiteAlpha.700" lineHeight="tall">
-                {item.body}
+                {t(`beyond.${item.id}Body`)}
               </Text>
             </Box>
           </Box>

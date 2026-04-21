@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { IconButton, Fade } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { useLanguage } from "../context/LanguageContext";
 
 const ScrollToTopButton = () => {
+  const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ const ScrollToTopButton = () => {
         bottom={{ base: "20px", md: "32px" }}
         right={{ base: "20px", md: "32px" }}
         zIndex={1500}
-        aria-label="Scroll to top"
+        aria-label={t("scrollTop.label")}
         borderRadius="full"
         boxShadow="lg"
         size="md"

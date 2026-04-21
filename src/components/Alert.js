@@ -8,10 +8,12 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useAlertContext } from "../context/alertContext";
+import { useLanguage } from "../context/LanguageContext";
 import { useRef } from "react";
 
 function Alert() {
   const { isOpen, type, message, onClose } = useAlertContext();
+  const { t } = useLanguage();
   const cancelRef = useRef();
   const isSuccess = type === "success";
 
@@ -35,7 +37,7 @@ function Alert() {
           color="white"
           pb={2}
         >
-          {isSuccess ? "Message sent" : "Something went wrong"}
+          {isSuccess ? t("alert.successTitle") : t("alert.errorTitle")}
         </AlertDialogHeader>
         <AlertDialogBody color="whiteAlpha.800">{message}</AlertDialogBody>
         <AlertDialogFooter>
@@ -46,7 +48,7 @@ function Alert() {
             color="white"
             _hover={{ bg: "whiteAlpha.300" }}
           >
-            Close
+            {t("alert.close")}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

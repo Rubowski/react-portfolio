@@ -7,6 +7,7 @@ import BeyondProjectsSection from "./components/BeyondProjectsSection";
 import ContactMeSection from "./components/ContactMeSection";
 import Footer from "./components/Footer";
 import { AlertProvider } from "./context/alertContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import Alert from "./components/Alert";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import theme from "./theme";
@@ -14,19 +15,21 @@ import theme from "./theme";
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <AlertProvider>
-        <Box as="main">
-          <Header />
-          <LandingSection />
-          <ThisPortfolioSection />
-          <ProjectsSection />
-          <BeyondProjectsSection />
-          <ContactMeSection />
-          <Footer />
-          <Alert />
-          <ScrollToTopButton />
-        </Box>
-      </AlertProvider>
+      <LanguageProvider>
+        <AlertProvider>
+          <Box as="main">
+            <Header />
+            <LandingSection />
+            <ThisPortfolioSection />
+            <ProjectsSection />
+            <BeyondProjectsSection />
+            <ContactMeSection />
+            <Footer />
+            <Alert />
+            <ScrollToTopButton />
+          </Box>
+        </AlertProvider>
+      </LanguageProvider>
     </ChakraProvider>
   );
 }
