@@ -1,23 +1,25 @@
 import { useState } from "react";
-import { enquiryLabelByValue } from "../constants/contactEnquiry";
+import { ENQUIRY_OPTIONS } from "../constants/contactEnquiry";
 
 const WEB3FORMS_URL = "https://api.web3forms.com/submit";
 
+/**
+ * @param { (path: string, vars?: Record<string, string | number>) => string } t
+ */
 const useSubmit = () => {
   const [isLoading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
 
-  const submit = async (data) => {
+  const submit = async (data, t) => {
     const accessKey = process.env.REACT_APP_WEB3FORMS_ACCESS_KEY;
     setResponse(null);
     setLoading(true);
     try {
       if (!accessKey) {
-        throw new Error(
-          "Contact form is not configured. Add REACT_APP_WEB3FORMS_ACCESS_KEY to .env.local (local) and to Vercel Environment Variables (production). Get a key at https://web3forms.com"
-        );
+        throw new Error(t("contact.errorNotConfigured"));
       }
-      const enquiry = enquiryLabelByValue[data.type] ?? data.type;
+      const opt = ENQUIRY_OPTIONS.find((o) => o.value === data.type);
+      const enquiry = opt ? t(opt.labelKey) : data.type;
       const res = await fetch(WEB3FORMS_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,19 +34,19 @@ const useSubmit = () => {
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json.success === false) {
         throw new Error(
-          json.message || "Could not send your message. Please try again."
+          json.message || t("contact.errorSendFailed")
         );
       }
       setResponse({
         type: "success",
-        message: `Thanks ${data.firstName}, your message was sent.`,
+        message: t("contact.submitSuccess", { name: data.firstName }),
       });
     } catch (error) {
       setResponse({
         type: "error",
         message:
           error.message ||
-          "Something went wrong, please try again later.",
+          t("contact.errorGeneric"),
       });
     } finally {
       setLoading(false);

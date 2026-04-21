@@ -1,47 +1,41 @@
 /**
- * Options for the contact form “Type of enquiry” field.
- * `value` is submitted; `label` is what you see in email/Web3Forms.
+ * Contact form “Type of enquiry” values. Labels come from i18n (`labelKey`).
  */
 export const ENQUIRY_OPTIONS = [
   {
     value: "freelance",
-    label: "Freelance or fixed-scope project",
+    labelKey: "contact.enquiryOptions.freelance",
   },
   {
     value: "contract_role",
-    label: "Contract or ongoing engagement",
+    labelKey: "contact.enquiryOptions.contract_role",
   },
   {
     value: "fulltime",
-    label: "Full-time role (recruiter / hiring manager)",
+    labelKey: "contact.enquiryOptions.fulltime",
   },
   {
     value: "shopify",
-    label: "Shopify / e-commerce store",
+    labelKey: "contact.enquiryOptions.shopify",
   },
   {
     value: "wordpress",
-    label: "WordPress site, theme, or plugin",
+    labelKey: "contact.enquiryOptions.wordpress",
   },
   {
     value: "react_frontend",
-    label: "React / frontend application",
+    labelKey: "contact.enquiryOptions.react_frontend",
   },
   {
     value: "consultation",
-    label: "Consultation, audit, or code review",
+    labelKey: "contact.enquiryOptions.consultation",
   },
   {
     value: "other",
-    label: "Something else",
+    labelKey: "contact.enquiryOptions.other",
   },
 ];
 
 export const DEFAULT_ENQUIRY = ENQUIRY_OPTIONS[0].value;
 
 export const enquiryValues = ENQUIRY_OPTIONS.map((o) => o.value);
-
-export const enquiryLabelByValue = ENQUIRY_OPTIONS.reduce((acc, { value, label }) => {
-  acc[value] = label;
-  return acc;
-}, {});

@@ -1,8 +1,12 @@
 import React from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { gradientFooter } from "../constants/sectionGradients";
+import { useLanguage } from "../context/LanguageContext";
 
 const Footer = () => {
+  const { t } = useLanguage();
+  const year = new Date().getFullYear();
+
   return (
     <Box
       as="footer"
@@ -19,7 +23,7 @@ const Footer = () => {
         align="center"
       >
         <Text color="whiteAlpha.600" fontSize="sm" textAlign="center">
-          Odysseas Roumpeas · © {new Date().getFullYear()}
+          {t("footer.line", { year })}
         </Text>
       </Flex>
     </Box>

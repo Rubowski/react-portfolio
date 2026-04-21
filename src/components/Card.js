@@ -10,6 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 const linkStyles = {
   display: "inline-flex",
@@ -22,6 +23,8 @@ const linkStyles = {
 };
 
 const Card = ({ title, description, imageSrc, github, demo, url }) => {
+  const { t } = useLanguage();
+
   return (
     <VStack
       align="stretch"
@@ -61,7 +64,7 @@ const Card = ({ title, description, imageSrc, github, demo, url }) => {
           px={4}
           textAlign="center"
         >
-          Add an image in src/data/projects.js
+          {t("card.imagePlaceholder")}
         </Box>
       )}
       <VStack align="stretch" spacing={4} p={{ base: 5, md: 6 }} flex="1">
@@ -80,19 +83,19 @@ const Card = ({ title, description, imageSrc, github, demo, url }) => {
           <Flex gap={{ base: 3, md: 6 }} flexWrap="wrap">
             {demo && (
               <Link href={demo} isExternal sx={linkStyles}>
-                Live demo
+                {t("card.liveDemo")}
                 <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" />
               </Link>
             )}
             {url && (
               <Link href={url} isExternal sx={linkStyles}>
-                Website
+                {t("card.website")}
                 <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" />
               </Link>
             )}
             {github && (
               <Link href={github} isExternal sx={linkStyles}>
-                GitHub
+                {t("card.github")}
                 <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" />
               </Link>
             )}

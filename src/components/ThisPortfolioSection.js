@@ -11,22 +11,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { SECTION_INNER_MAX_W } from "../constants/layout";
 import { gradientThisPortfolio } from "../constants/sectionGradients";
+import { useLanguage } from "../context/LanguageContext";
 
-const features = [
-  "React (Create React App) with Chakra UI and a custom theme",
-  "Responsive layout, fluid project grid, and mobile-first navigation",
-  "Contact form wired to a real inbox (no fake demo submit)",
-  "Deployed as a static site on Vercel for fast loads worldwide",
+const featureKeys = [
+  "thisSite.feature1",
+  "thisSite.feature2",
+  "thisSite.feature3",
+  "thisSite.feature4",
 ];
-
-const vision =
-  "I wanted this site to feel like the work it represents: clear structure, honest copy, and no friction between you and a conversation—on any screen size.";
 
 /**
  * Short “meta” band: this portfolio as its own shipped project.
- * Copy is easy to tweak in `features` and `vision` above.
  */
 const ThisPortfolioSection = () => {
+  const { t } = useLanguage();
+
   return (
     <FullScreenSection
       isDarkBackground
@@ -34,6 +33,7 @@ const ThisPortfolioSection = () => {
       spacing={8}
       innerMaxW={SECTION_INNER_MAX_W}
       innerPy={{ base: 14, md: 18 }}
+      pb={{ base: 10, md: 14, lg: 16 }}
       bgGradient={gradientThisPortfolio}
       id="this-site-section"
     >
@@ -45,14 +45,14 @@ const ThisPortfolioSection = () => {
           color="brand.300"
           textTransform="uppercase"
         >
-          Meta
+          {t("thisSite.kicker")}
         </Text>
         <Heading
           as="h2"
           fontSize={{ base: "2xl", md: "3xl" }}
           scrollMarginTop="5.5rem"
         >
-          This portfolio site
+          {t("thisSite.title")}
         </Heading>
         <Text
           color="whiteAlpha.700"
@@ -60,10 +60,7 @@ const ThisPortfolioSection = () => {
           maxW="3xl"
           lineHeight="tall"
         >
-          This page is also a project: a small React app I maintain myself—
-          same care for layout, performance, and accessibility I bring to
-          client work. It&apos;s the reference implementation of how I like to
-          ship frontends.
+          {t("thisSite.intro")}
         </Text>
       </VStack>
 
@@ -77,12 +74,12 @@ const ThisPortfolioSection = () => {
             mb={4}
             textTransform="uppercase"
           >
-            What&apos;s in the box
+            {t("thisSite.boxTitle")}
           </Text>
           <VStack align="stretch" spacing={3}>
-            {features.map((line) => (
+            {featureKeys.map((key) => (
               <Box
-                key={line}
+                key={key}
                 display="flex"
                 gap={3}
                 alignItems="flex-start"
@@ -91,7 +88,7 @@ const ThisPortfolioSection = () => {
                   <FontAwesomeIcon icon={faCheck} size="sm" />
                 </Box>
                 <Text fontSize="sm" color="whiteAlpha.800" lineHeight="tall">
-                  {line}
+                  {t(key)}
                 </Text>
               </Box>
             ))}
@@ -115,10 +112,10 @@ const ThisPortfolioSection = () => {
             mb={3}
             textTransform="uppercase"
           >
-            Vision
+            {t("thisSite.visionTitle")}
           </Text>
           <Text fontSize={{ base: "md", md: "lg" }} lineHeight="tall" color="whiteAlpha.900">
-            {vision}
+            {t("thisSite.vision")}
           </Text>
         </Box>
       </SimpleGrid>

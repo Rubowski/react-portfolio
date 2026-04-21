@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useFormik } from "formik";
 import {
   Box,
@@ -28,6 +28,7 @@ import * as Yup from "yup";
 import FullScreenSection from "./FullScreenSection";
 import useSubmit from "../hooks/useSubmit";
 import { useAlertContext } from "../context/alertContext";
+import { useLanguage } from "../context/LanguageContext";
 import { SECTION_INNER_MAX_W } from "../constants/layout";
 import {
   DEFAULT_ENQUIRY,
@@ -44,31 +45,31 @@ const fieldStyles = {
   _placeholder: { color: "whiteAlpha.500" },
 };
 
-const messageTips = [
-  "What you're building or fixing (store, site, feature)",
-  "Rough timeline or go-live date",
-  "Budget range or type of engagement (project, retainer, etc.)",
-  "Platform or stack if you know it (e.g. Shopify, WordPress, etc.)",
-  "Whether design and copy are ready, or it needs to be created from scratch"
+const messageTipKeys = [
+  "contact.tip1",
+  "contact.tip2",
+  "contact.tip3",
+  "contact.tip4",
+  "contact.tip5",
 ];
 
-const asideLinks = [
+const asideLinkConfig = [
   {
-    label: "Email",
+    labelKey: "social.email",
     text: "odi.roumpeas@gmail.com",
     href: "mailto:odi.roumpeas@gmail.com",
     icon: faEnvelope,
     external: false,
   },
   {
-    label: "GitHub",
+    labelKey: "social.github",
     text: "Rubowski",
     href: "https://github.com/Rubowski",
     icon: faGithub,
     external: true,
   },
   {
-    label: "LinkedIn",
+    labelKey: "social.linkedin",
     text: "Odysseas Roumpeas",
     href: "https://www.linkedin.com/in/odysseas-roumpeas-807272296/",
     icon: faLinkedin,
@@ -77,28 +78,42 @@ const asideLinks = [
 ];
 
 const ContactMeSection = () => {
+  const { locale, t } = useLanguage();
   const { isLoading, response, submit } = useSubmit();
   const { onOpen } = useAlertContext();
 
-  const formik = useFormik({
-    initialValues: {
+  const validationSchema = useMemo(
+    () =>
+      Yup.object({
+        firstName: Yup.string().required(t("contact.validation.required")),
+        email: Yup.string()
+          .email(t("contact.validation.email"))
+          .required(t("contact.validation.required")),
+        type: Yup.string().oneOf(
+          enquiryValues,
+          t("contact.validation.enquiryType")
+        ),
+        comment: Yup.string()
+          .required(t("contact.validation.required"))
+          .min(25, t("contact.validation.commentMin")),
+      }),
+    [t, locale]
+  );
+
+  const initialFormValues = useMemo(
+    () => ({
       firstName: "",
       email: "",
       type: DEFAULT_ENQUIRY,
       comment: "",
-    },
-    onSubmit: (values) => submit(values),
-    validationSchema: Yup.object({
-      firstName: Yup.string().required("Required"),
-      email: Yup.string().email("Invalid email address").required("Required"),
-      type: Yup.string().oneOf(
-        enquiryValues,
-        "Please pick a valid enquiry type"
-      ),
-      comment: Yup.string()
-        .required("Required")
-        .min(25, "Must be at least 25 characters"),
     }),
+    []
+  );
+
+  const formik = useFormik({
+    initialValues: initialFormValues,
+    onSubmit: (values) => submit(values, t),
+    validationSchema,
   });
 
   const resetFormRef = useRef(formik.resetForm);
@@ -129,7 +144,7 @@ const ContactMeSection = () => {
             id="contactme-section"
             scrollMarginTop="5.5rem"
           >
-            Let&apos;s work together
+            {t("contact.title")}
           </Heading>
           <Text
             color="whiteAlpha.700"
@@ -138,8 +153,7 @@ const ContactMeSection = () => {
             mx="auto"
             lineHeight="tall"
           >
-            Send a note about your project, timeline, and budget. I usually
-            reply within a few days.
+            {t("contact.subtitle")}
           </Text>
         </VStack>
 
@@ -163,8 +177,8 @@ const ContactMeSection = () => {
           >
             <InfoBlurb
               icon={faPaperPlane}
-              title="Message"
-              body="All fields are required unless noted."
+              title={t("contact.messageBlurbTitle")}
+              body={t("contact.messageBlurbBody")}
               mb={6}
               compact
             />
@@ -173,7 +187,7 @@ const ContactMeSection = () => {
                 <FormControl
                   isInvalid={formik.touched.firstName && formik.errors.firstName}
                 >
-                  <FormLabel htmlFor="firstName">Name</FormLabel>
+                  <FormLabel htmlFor="firstName">{t("contact.name")}</FormLabel>
                   <Input
                     id="firstName"
                     name="firstName"
@@ -185,7 +199,7 @@ const ContactMeSection = () => {
                 <FormControl
                   isInvalid={formik.touched.email && formik.errors.email}
                 >
-                  <FormLabel htmlFor="email">Email</FormLabel>
+                  <FormLabel htmlFor="email">{t("contact.email")}</FormLabel>
                   <Input
                     id="email"
                     name="email"
@@ -197,7 +211,7 @@ const ContactMeSection = () => {
                   <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
                 </FormControl>
                 <FormControl>
-                  <FormLabel htmlFor="type">Type of enquiry</FormLabel>
+                  <FormLabel htmlFor="type">{t("contact.enquiryType")}</FormLabel>
                   <Select
                     id="type"
                     name="type"
@@ -207,9 +221,9 @@ const ContactMeSection = () => {
                       "& option": { background: "#1a202c", color: "white" },
                     }}
                   >
-                    {ENQUIRY_OPTIONS.map(({ value, label }) => (
+                    {ENQUIRY_OPTIONS.map(({ value, labelKey }) => (
                       <option key={value} value={value}>
-                        {label}
+                        {t(labelKey)}
                       </option>
                     ))}
                   </Select>
@@ -217,7 +231,7 @@ const ContactMeSection = () => {
                 <FormControl
                   isInvalid={formik.touched.comment && formik.errors.comment}
                 >
-                  <FormLabel htmlFor="comment">Message</FormLabel>
+                  <FormLabel htmlFor="comment">{t("contact.message")}</FormLabel>
                   <Textarea
                     id="comment"
                     name="comment"
@@ -233,13 +247,13 @@ const ContactMeSection = () => {
                   size="lg"
                   w="full"
                   isLoading={isLoading}
-                  loadingText="Sending"
+                  loadingText={t("contact.sending")}
                   bg="brand.500"
                   color="gray.900"
                   _hover={{ bg: "brand.400" }}
                   _active={{ bg: "brand.600" }}
                 >
-                  Send message
+                  {t("contact.send")}
                 </Button>
               </VStack>
             </form>
@@ -265,8 +279,8 @@ const ContactMeSection = () => {
               >
                 <InfoBlurb
                   icon={faClock}
-                  title="Response time"
-                  body="Typically within 2–4 business days. Urgent timelines? Mention it in your message."
+                  title={t("contact.responseTitle")}
+                  body={t("contact.responseBody")}
                 />
               </Box>
               <VStack align="stretch" spacing={3} w="100%">
@@ -277,9 +291,9 @@ const ContactMeSection = () => {
                   color="whiteAlpha.500"
                   textAlign={{ base: "center", lg: "left" }}
                 >
-                  DIRECT CONTACT
+                  {t("contact.directContact")}
                 </Text>
-                {asideLinks.map((item) => (
+                {asideLinkConfig.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -313,7 +327,7 @@ const ContactMeSection = () => {
                     </Box>
                     <Box minW={0}>
                       <Text fontSize="xs" color="whiteAlpha.500" fontWeight="600">
-                        {item.label}
+                        {t(item.labelKey)}
                       </Text>
                       <Text fontWeight="600" noOfLines={1}>
                         {item.text}
@@ -340,12 +354,12 @@ const ContactMeSection = () => {
                 </Box>
                 <Box>
                   <Text fontWeight="700" fontSize="sm" mb={3} color="white">
-                    Include in your message
+                    {t("contact.tipsTitle")}
                   </Text>
                   <VStack align="stretch" spacing={3}>
-                    {messageTips.map((line) => (
+                    {messageTipKeys.map((key) => (
                       <Text
-                        key={line}
+                        key={key}
                         fontSize="sm"
                         color="whiteAlpha.700"
                         lineHeight="tall"
@@ -353,7 +367,7 @@ const ContactMeSection = () => {
                         borderLeftWidth="2px"
                         borderLeftColor="brand.400"
                       >
-                        {line}
+                        {t(key)}
                       </Text>
                     ))}
                   </VStack>
